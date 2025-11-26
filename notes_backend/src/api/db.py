@@ -11,14 +11,20 @@ load_dotenv()
 
 
 def _default_db_path() -> str:
-    """Resolve the default database path to a sibling notes_database/myapp.db"""
+    """Resolve the default database path to a sibling notes_database/myapp.db.
+
+    This computes:
+      <workspace_root>/notes_database/myapp.db
+
+    Where <workspace_root> is the shared parent directory of notes_backend and notes_database.
+    """
     # notes_backend/src/api/db.py -> notes_backend
     backend_root = Path(__file__).resolve().parents[2]
     # sibling container root is assumed to be notes_database at same level as notes_backend
     sibling_db_dir = backend_root.parent / "notes_database"
     # Ensure directory exists (do not create file yet)
     sibling_db_dir.mkdir(parents=True, exist_ok=True)
-    return str(sibling_db_dir / "myapp.db")
+    return str((sibling_db_dir / "myapp.db").resolve())
 
 
 def get_db_path() -> str:
